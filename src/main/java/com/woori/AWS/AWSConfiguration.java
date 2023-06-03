@@ -18,6 +18,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
+//AWS S3 연결
+//JYS
 @Configuration
 @EnableWebMvc
 public class AWSConfiguration implements WebMvcConfigurer {
