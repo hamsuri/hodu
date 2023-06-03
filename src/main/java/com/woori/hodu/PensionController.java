@@ -53,7 +53,7 @@ public class PensionController {
 	
 	@Autowired
 	private AWSS3Service s3Service;
-	
+	//JYS
 	@RequestMapping("likeList.do")
 	public String likeList(PensionVO vo, Model model) {
 		
@@ -81,7 +81,7 @@ public class PensionController {
 		
 		return "user/list";
 	}
-
+	//JYS
 	@RequestMapping("moneyList.do")
 	public String moneyList(PensionVO vo, Model model) {
 		
@@ -111,7 +111,7 @@ public class PensionController {
 	}
 	
 
-	
+	//JYS
 	@RequestMapping("RoomList.do")
 	public String RoomList(RoomVO vo, Model model) {
 		
@@ -120,7 +120,7 @@ public class PensionController {
 		
 		return "user/list_pension";
 	}
-	
+	//JYS
 	@RequestMapping("roomRegister.do")
 	public String roomRegister(RoomVO vo, @RequestParam("file1") MultipartFile img_room1,@RequestParam("file2") MultipartFile img_room2,
 			@RequestParam("file3") MultipartFile img_room3,@RequestParam("file4") MultipartFile img_room4, @RequestParam("file5") MultipartFile img_room5,
@@ -182,7 +182,7 @@ public class PensionController {
 				}
 			
 	}
-
+	//JYS
 	@RequestMapping("pensionRegister.do")
 	public String pensionRegister(PensionVO vo, @RequestParam("file") MultipartFile pension_img, HttpServletRequest req,HttpSession session) {
 		 
@@ -211,6 +211,7 @@ public class PensionController {
 
 	
 	//커뮤니티 리스트 출력
+	//JYS
 	@RequestMapping("CList.do")
 	public String CList(CCriteria cri, Model model){
 		
@@ -232,6 +233,7 @@ public class PensionController {
 	}
 	
 	// 내가 쓴 글 리스트
+	//JYS
 	@RequestMapping("CMyList.do")
 	public String CMyList(CMyCriteria cri, Model model) {
 		List<CommunityVO> CMyList = pensionService.CMyList(cri);
@@ -248,6 +250,7 @@ public class PensionController {
 		return "community_mypost";
 	}
 	
+	//JYS
 	@RequestMapping("CView.do")
 	public String CView(int index, Model model, ReplyVO vo, RedirectAttributes redirect) {
 		List<ReplyVO> ReplyList = pensionService.ReplyList(vo);
@@ -258,12 +261,14 @@ public class PensionController {
 		return "community_content";
 	}
 	//커뮤니티 입력
+	//JYS
 	@RequestMapping("CInsert.do")
 	public String CInsert(CommunityVO vo, Model model) {
 		pensionService.CInsert(vo);
 		return "redirect: CList.do";
 	}
 	//커뮤니티 수정
+	//JYS
 	@RequestMapping("CUpdate.do")
 	public String CUpdate (int index, CommunityVO vo, Model model, RedirectAttributes redirect) {
 		pensionService.CUpdate(vo);
@@ -271,6 +276,7 @@ public class PensionController {
 		redirect.addAttribute("index", vo.getIndex());
 		return "redirect: CView.do";
 	}
+	//JYS
 	@RequestMapping("CView2.do")
 	public String CView2(int index, Model model, ReplyVO vo, RedirectAttributes redirect) {
 		List<ReplyVO> ReplyList = pensionService.ReplyList(vo);
@@ -282,6 +288,7 @@ public class PensionController {
 	}
 	
 	//커뮤니티 삭제
+	//JYS
 	@RequestMapping("CDelete.do")
 	public String CDelete(@RequestParam("index") int index, RedirectAttributes redirect) {
 		pensionService.CDelete(index);
@@ -290,6 +297,7 @@ public class PensionController {
 	}
 	
 	//댓글 입력 및 출력
+	//JYS
 	@RequestMapping("ReplyInsert.do")
 	public String ReplyInsert(ReplyVO vo, RedirectAttributes redirect, @RequestParam("index") int index) {
 		pensionService.ReplyInsert(vo);
@@ -297,6 +305,7 @@ public class PensionController {
 		return "redirect: CView.do";
 	}
 	//댓글 수정
+	//JYS
 	@RequestMapping("ReplyUpdate.do")
 	public String ReplyUpdate (ReplyVO vo, RedirectAttributes redirect) {
 		pensionService.ReplyUpdate(vo);
@@ -304,6 +313,7 @@ public class PensionController {
 		return "redirect: CView.do";
 	}
 	//댓글 삭제
+	//JYS
 	@RequestMapping("ReplyDelete.do")
 	public String ReplyDelete (int reply_index,RedirectAttributes redirect,@RequestParam("index") int index) {
 		pensionService.ReplyDelete(reply_index);
@@ -312,6 +322,7 @@ public class PensionController {
 	}
 	
 	//펜션 이름 출력
+	//JYS
 	@RequestMapping("pensionName.do")
 	public String NameSelect(PensionVO vo, Model model,@RequestParam("amount") int amount, @RequestParam("pageNum") int pageNum, RedirectAttributes redirect){
 		List<PensionVO> NameSelect = pensionService.NameSelect(vo);
@@ -321,6 +332,7 @@ public class PensionController {
 		return "user/qna_form";
 	}
 	//객실 이름 출력
+	//JYS
 	@RequestMapping("roomName.do")
 	public String RoomSelect(RoomVO vo, Model model,@RequestParam("pensionName") String pensionName){
 		List<RoomVO> RoomSelect = pensionService.RoomSelect(pensionName);
