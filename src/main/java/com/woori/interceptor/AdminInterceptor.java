@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+* JYS
+* 인터셉터
+**/
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
 
