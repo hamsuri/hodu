@@ -46,7 +46,7 @@ public class UserJoinController {
 		public String login() {
 			return "login";
 		}
-		
+		//JYS
 		@RequestMapping("logincheck.do")
 		public ModelAndView logincheck(@ModelAttribute UserVO vo, HttpSession session) {
 			UserVO result = userJoinService.logincheck(vo, session);
@@ -78,6 +78,7 @@ public class UserJoinController {
 			return mav;
 		}
 		
+		//JYS
 		@RequestMapping("logout.do")
 		public ModelAndView logout(HttpSession session) {
 			userJoinService.logout(session);
@@ -98,6 +99,7 @@ public class UserJoinController {
 		
 		
 		// 회원가입 post
+		//JYS
 		@RequestMapping(value="signin.do", method = RequestMethod.POST)
 		public String userJoin2(UserVO vo, HttpServletResponse response) throws Exception {
 			int result = userJoinService.idCheck(vo);
@@ -120,7 +122,7 @@ public class UserJoinController {
 			
 			return "redirect:/";
 		}
-		
+		//JYS
 		@RequestMapping("viewProfile.do")
 		public String viewProfile(String userId, Model model) {
 			model.addAttribute("user", userJoinService.viewProfile(userId));
@@ -128,6 +130,7 @@ public class UserJoinController {
 			return "user/mypage/editProfile";
 		}
 		
+		//JYS
 		@RequestMapping("editProfile.do")
 		public String editProfile(@ModelAttribute UserVO vo) {
 			String inputPass = vo.getUserPw();
@@ -146,6 +149,7 @@ public class UserJoinController {
 			return result;
 		}
 		
+		//JYS
 		@RequestMapping("deleteProfile.do")
 		public String deleteProfile(String userId, HttpSession session) {
 			userJoinService.deleteProfile(userId, session);
@@ -154,7 +158,7 @@ public class UserJoinController {
 		}
 		
 		//q리스트 출력
-		
+		//JYS
 		@RequestMapping("QList.do")
 		public String QList(Criteria cri, Model qmodel) {
 	
@@ -171,6 +175,7 @@ public class UserJoinController {
 		}
 		
 		//Q 비밀번호
+		//JYS
 		@RequestMapping("Q_pwCheck.do")
 		public ModelAndView Q_pwCheck(@ModelAttribute QnaVO qvo, @RequestParam("pageNum") int pageNum, @RequestParam("amount") int amount, HttpSession qsession, RedirectAttributes redirect) {
 			QnaVO result = userJoinService.Q_pwCheck(qvo, qsession);
@@ -191,6 +196,7 @@ public class UserJoinController {
 		}
 		
 		//Q 글쓰기
+		//JYS
 		@RequestMapping("Q_insert.do")
 		public String Q_insert(@ModelAttribute QnaVO qvo, @RequestParam("pageNum") int pageNum, @RequestParam("amount") int amount, RedirectAttributes redirect) {
 			
@@ -201,6 +207,7 @@ public class UserJoinController {
 		}
 		
 		//Q 확인
+		//JYS
 		@RequestMapping("QView.do")
 		public String QView(int Q_idx,HttpSession qsession, Model qmodel) {
 			qmodel.addAttribute("QView", userJoinService.QView(Q_idx,qsession));
@@ -209,6 +216,7 @@ public class UserJoinController {
 		}
 		
 		//Q 삭제
+		//JYS
 		@RequestMapping("QDelete.do")
 		public String QDelete(@RequestParam("Q_idx") int Q_idx) {
 			userJoinService.QDelete(Q_idx);
@@ -216,6 +224,7 @@ public class UserJoinController {
 		}
 		
 		//리뷰 작성
+		//JYS
 		@RequestMapping("ReviewInsert.do")
 		public String ReviewInsert(ReviewVO rvo, @RequestParam("pensionName") String pensionName, RedirectAttributes redirect) {
 			userJoinService.ReviewInsert(rvo);
@@ -224,6 +233,7 @@ public class UserJoinController {
 		}
 		
 		//R 리스트 출력
+		//JYS
 		@RequestMapping("ReviewList.do")
 		public String ReviewList(ReviewVO rvo, Model model){
 			List<ReviewVO> ReviewList = userJoinService.ReviewList(rvo);
@@ -232,6 +242,7 @@ public class UserJoinController {
 		}
 		
 		//나의 예약 목록 출력
+		//JYS
 		@RequestMapping("ReservationList.do")
 		public String ReservationList(ReservationVO rvo, Model model){
 			List<ReservationVO> reservationList = userJoinService.ReservationList(rvo);
@@ -239,11 +250,16 @@ public class UserJoinController {
 			return "user/mypage/reservationList";
 		}
 		
+		//나의 예약 세부보기
+		//JYS
 		@RequestMapping("UserRView.do")
 		public String UserRView(int reservation_idx, Model model) {
 			model.addAttribute("UserRView", userJoinService.UserRView(reservation_idx));
 			return "user/mypage/reservationContent_update";
 		}
+	
+		//예약 수정
+		//JYS
 		@RequestMapping("UserRUpdate.do")
 		public String UserRUpdate(ReservationVO rvo,HttpSession session, RedirectAttributes redirect) {
 			userJoinService.UserRUpdate(rvo);
@@ -251,6 +267,8 @@ public class UserJoinController {
 			return "redirect: ReservationList.do";
 		}
 		
+		//예약 삭제
+		//JYS
 		@RequestMapping("deleteReservation.do")
 		public String deleteReservation(int reservation_idx, HttpSession session, RedirectAttributes redirect) {
 			userJoinService.DeleteReservation(reservation_idx);
@@ -259,6 +277,7 @@ public class UserJoinController {
 		}
 		
 		//예약하기
+		//JYS
 		@RequestMapping("RInsert.do")
 		public String RInsert(ReservationVO rvo,RedirectAttributes redirect, HttpSession session) {
 			userJoinService.RInsert(rvo);
