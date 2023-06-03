@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+//AWS S3 연결
+//JYS
 @Service
 public class AWSS3Service {
 
