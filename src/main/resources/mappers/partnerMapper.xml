@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="partner">
+	<select id="plogin" resultType="com.woori.domain.PartnerVO">
+		select  
+			*  
+		from   
+			partnerjoin    
+		where partnerId = #{partnerId}   
+			and businessNum = #{businessNum}   
+		
+	</select>
+	
+	<select id="sessionPensionName" resultType="String" parameterType="String">
+		select pensionName   
+		from  pension   
+		where  partnerId = #{partnerId}   
+	</select>
+	
+
+	<insert id="insertPartner">
+		INSERT INTO partnerjoin(partnerId, partnerPw, partnerName, businessNum, partnerMobile, partnerEmail) 
+			VALUES(#{partnerId},#{partnerPw},#{partnerName},#{businessNum},#{partnerMobile},#{partnerEmail})
+	
+	</insert>
+
+	<select id="viewPProfile" resultType="com.woori.domain.PartnerVO">
+		select * from partnerjoin where partnerId=#{partnerId}
+	</select>
+	
+	<update id="editPProfile" parameterType="com.woori.domain.PartnerVO">
+		update  partnerjoin  set   
+		partnerPw=#{partnerPw},  
+		partnerName=#{partnerName},   
+		businessNum=#{businessNum}, 
+		partnerMobile=#{partnerMobile},  
+		partnerEmail=#{partnerEmail},
+		where partnerId=#{partnerId}   
+	</update>
+	<update id="uploadImg_business" parameterType="com.woori.domain.PartnerVO">
+		update  partnerjoin  set   
+		img_business=#{img_business}
+		where partnerId=#{partnerId}   
+	</update>
+	
+	
+	<!-- 아이디 중복체크 -->
+	<select id="pidCheck" resultType="int">
+		SELECT COUNT(*) FROM partnerjoin WHERE partnerId=#{partnerId}
+	
+	</select>
+	
+	<delete id="deletePProfile">
+		delete from  
+		partnerjoin  
+		where partnerId=#{partnerId}  
+	</delete>
+	
+	<select id="RList" resultType="com.woori.domain.ReservationVO">
+		select * from reservation where pensionName = #{pensionName} order by reservation_date  
+	</select>
+	
+	<select id="RView" resultType="com.woori.domain.ReservationVO">
+		select * from reservation where reservation_idx = #{reservation_idx}
+	</select>
+	
+	<delete id="RDelete">
+		delete from  
+		reservation   
+		where reservation_idx=#{reservation_idx}  
+	</delete>
+	
+	<update id="RUpdate" parameterType="com.woori.domain.ReservationVO">
+		update  reservation  set   
+		dogSize=#{dogSize},   
+		peopleNum=#{peopleNum},    
+		message_to_p=#{message_to_p},  
+		reservation_date=#{reservation_date}   
+		where reservation_idx=#{reservation_idx}   
+	</update>
+	
+	<select id="RView2" resultType="com.woori.domain.ReservationVO">
+		select * from reservation where reservation_idx = #{reservation_idx}
+	</select>
+	
+	
+	<!-- 검색 조건문 -->
+    <sql id="pcriteria">
+        <trim prefix="where (" suffix=")" prefixOverrides="OR">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            Q_title like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            Q_content like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            userId like concat('%',#{keyword},'%' )
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    
+    </sql>
+	
+	<!-- A리스트 출력 -->
+	
+	<select id="AList" resultType="com.woori.domain.QnaVO" parameterType="com.woori.domain.PCriteria">
+		select * from qna 
+			<if test="keyword != null">
+                 <include refid="pcriteria"></include>
+                 and pensionName = #{pensionName}  
+            </if>
+            <if test="keyword == null">
+	       		 where pensionName = #{pensionName}   
+	        </if>
+		order by Q_idx    
+		limit #{skip},#{amount}   
+		
+	</select>
+	
+	<!-- 게시물 개수 -->
+	<select id="AgetTotal" resultType="int">
+		select count(*) from qna  
+		<if test="keyword != null">
+            <include refid="pcriteria"></include>
+            and pensionName = #{pensionName}   
+        </if>   
+        <if test="keyword == null">
+	       	where pensionName = #{pensionName}   
+	    </if>
+	</select>
+	
+	<!-- A 세부 정보 보기 -->
+	
+	<select id="AView" resultType="com.woori.domain.QnaVO" parameterType="int">
+		select   *   from   qna   where   Q_idx   =   #{Q_idx}     
+	</select> 
+	
+	<!-- A 답변 등록 -->
+	
+	<update id="updateAnswer">
+		UPDATE qna SET A_content=#{A_content} where Q_idx = #{Q_idx}
+	
+	</update>
+	
+	<!-- My pension 정보 -->
+	<select id="MyPension" resultType="com.woori.domain.PensionVO" parameterType="String">
+		select * from pension where partnerId = #{partnerId}   
+	</select>
+	<!-- My room 출력 -->
+	<select id="ViewMyRoom" resultType="com.woori.domain.RoomVO" parameterType="String">
+		select * from room where partnerId = #{partnerId}   
+	</select>
+	<!-- My room 상세보기 -->
+	<select id="ViewMyRoom2" resultType="com.woori.domain.RoomVO" parameterType="int">
+		select * from room where room_idx = #{room_idx}   
+	</select>
+	<!-- My room 수정 -->
+	<update id="roomUpdate" parameterType="com.woori.domain.RoomVO">
+		update  room  set  
+		roomName=#{roomName},  
+		price=#{price}, 
+		dogSize=#{dogSize},  
+		dogNum=#{dogNum},   
+		peopleNum=#{peopleNum},    
+		message_room=#{message_room}   
+		where room_idx=#{room_idx}  
+	</update>
+	<!-- My pension 수정 -->
+	<update id="pensionUpdate" parameterType="com.woori.domain.PensionVO">
+		update  pension  set  
+		pensionName=#{pensionName},  
+		region=#{region}, 
+		address=#{address},  
+		message=#{message}   
+		where partnerId=#{partnerId}  
+
+	</update>
+</mapper>

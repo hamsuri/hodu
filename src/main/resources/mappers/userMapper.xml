@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	<select id="login" resultType="com.woori.domain.UserVO">
+		select  
+			*   
+		from   
+			userjoin   
+		where userId = #{userId}   
+	
+		
+	</select>
+	
+	<select id="viewUser" resultType="com.woori.domain.UserVO">
+		select * from userjoin where userId=#{userId} and userPw=#{userPw} 
+	</select>
+
+	
+	<insert id="insertUser">
+		INSERT INTO userjoin(userId, userPw, userName, userBirth, sex, userMobile, userEmail) 
+			VALUES(#{userId},#{userPw},#{userName},#{userBirth},#{sex},#{userMobile},#{userEmail})
+	
+	</insert>
+
+	<select id="viewProfile" resultType="com.woori.domain.UserVO">
+		select * from userjoin where userId=#{userId}
+	</select>
+	
+	<update id="editProfile" parameterType="com.woori.domain.UserVO">
+		update  userjoin  set   
+		userPw=#{userPw},  
+		userName=#{userName},   
+		userBirth=#{userBirth},  
+		sex=#{sex},   
+		userMobile=#{userMobile},  
+		userEmail=#{userEmail}   
+		where userId=#{userId}   
+	</update>
+	
+	
+	<!-- 아이디 중복체크 -->
+	<select id="idCheck" resultType="int">
+		SELECT COUNT(*) FROM userjoin WHERE userId=#{userId}
+	
+	</select>
+	
+	<delete id="deleteProfile">
+		delete from  
+		userjoin  
+		where userId=#{userId}  
+	</delete>
+	
+	
+	
+<!-- 검색 조건문 -->
+    <sql id="criteria">
+        <trim prefix="where (" suffix=")" prefixOverrides="OR">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            Q_title like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            Q_content like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            userId like concat('%',#{keyword},'%' )
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    
+    </sql>
+	
+	
+	<!-- question 리스트 출력 -->
+	<select id="question" resultType="com.woori.domain.QnaVO" parameterType="com.woori.domain.Criteria">
+		select * from qna 
+			<if test="keyword != null">
+                 <include refid="criteria"></include>
+            </if>
+		order by Q_idx DESC    limit #{skip},#{amount} 
+	</select>
+	
+	<!-- 게시물 개수 -->
+	<select id="getTotal" resultType="int">
+		select count(*) from qna  
+		<if test="keyword != null">
+            <include refid="criteria"></include>
+        </if>   
+	</select>
+	
+	<!-- 게시물 비밀번호 -->
+		<select id="Q_pwCheck" resultType="com.woori.domain.QnaVO">
+		select  
+			*   
+		from   
+			qna   
+		where Q_idx = #{Q_idx} and Q_pw = #{Q_pw}     
+	</select>
+	
+	<!-- Q 게시판 삽입 -->
+	
+	<insert id="Q_insert">
+		INSERT INTO qna(userId, pensionName, Q_title, Q_content, Q_date, Q_pw) 
+			VALUES(#{userId},#{pensionName},#{Q_title},#{Q_content}, current_timestamp ,#{Q_pw})
+	</insert>
+	
+	<!-- Q세부 정보 보기 -->
+	
+	<select id="QView" resultType="com.woori.domain.QnaVO" parameterType="int">
+		select * from qna where Q_idx = #{Q_idx}    
+	</select>
+	
+	
+	<!-- Q 삭제 -->
+	<delete id="QDelete">
+		delete from qna where Q_idx = #{Q_idx}   
+	</delete>	
+	
+	<!-- 리뷰 삽입 -->
+	<insert id="ReviewInsert">
+		INSERT INTO review(userId, R_idx, rating, R_content, pensionName) 
+			VALUES(#{userId},#{R_idx},#{rating},#{R_content},#{pensionName})
+	</insert>
+	
+	<!-- 리뷰 출력 -->
+	<select id="ReviewList" resultType="com.woori.domain.ReviewVO" parameterType="String">
+		select  *  from  review  where   pensionName=#{pensionName}   
+	</select>
+	
+	<!-- 나의 예약 목록 출력 -->
+	<select id="ReservationList" resultType="com.woori.domain.ReservationVO">
+		select * from reservation where userId = #{userId}
+	</select>
+	
+	<!-- 나의 예약 정보 출력 -->
+	<select id="UserRView" resultType="com.woori.domain.ReservationVO">
+		select * from reservation where reservation_idx = #{reservation_idx}  
+	</select>
+	
+	<!-- 나의 예약 수정 -->
+	<update id="UserRUpdate" parameterType="com.woori.domain.ReservationVO">
+		update  reservation  set   
+		dogSize=#{dogSize},   
+		peopleNum=#{peopleNum},    
+		message_to_p=#{message_to_p},  
+		reservation_date=#{reservation_date}   
+		where reservation_idx=#{reservation_idx}   
+	</update>
+	<!-- 예약 삭제 -->
+	<delete id="deleteReservation">
+		delete from  
+		reservation 
+		where reservation_idx=#{reservation_idx}  
+	</delete>
+	<!-- 예약 하기 -->
+	<insert id="RInsert">
+		INSERT INTO reservation(roomName,userId, userName, userMobile, userEmail, pensionName, price, dogSize, dogNum, peopleNum, message_to_p, reservation_date) 
+			VALUES(#{roomName},#{userId},#{userName},#{userMobile},#{userEmail},#{pensionName},#{price}, #{dogSize},#{dogNum}, #{peopleNum}, #{message_to_p}, #{reservation_date})
+	</insert>
+	
+	
+</mapper>

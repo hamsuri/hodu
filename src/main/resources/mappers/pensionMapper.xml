@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pension">
+	
+	<select id="likeList" resultType="com.woori.domain.PensionVO">
+		SELECT p.pensionName, p.img_pension, p.region, p.address, p.message, AVG(r.rating) AS avg_rating
+		FROM pension p
+		LEFT JOIN review r ON p.pensionName = r.pensionName 
+		WHERE p.region = #{region}
+		GROUP BY p.pensionName
+		ORDER BY avg_rating DESC
+	</select>
+	
+	<select id="moneyList" resultType="com.woori.domain.PensionVO">
+		SELECT p.pensionName, p.img_pension, p.region, p.address, p.message, Min(r.price) AS min_price 
+		FROM pension p
+		LEFT JOIN room r ON p.pensionName = r.pensionName 
+		WHERE p.region = #{region}
+		GROUP BY p.pensionName
+		ORDER BY min_price 
+	</select>
+	
+	<!-- 리뷰 평점 평균 -->
+	<select id="AvgRating" resultType="String">
+		select round(avg(rating),2) from review where pensionName = #{pensionName} 
+	</select>
+	
+	<!-- 가격 최소 -->
+	<select id="MinPrice" resultType="String">
+		select min(price) from room where pensionName = #{pensionName} 
+	</select>
+	
+	<!-- 객실 등록 -->
+	<insert id="roomRegister">
+		INSERT INTO room(room_idx, partnerId, roomName, price, dogSize,  
+			 dogNum, peopleNum, img_room1,img_room2,img_room3,img_room4,img_room5,img_room6,
+			  message_room, pensionName)  
+			VALUES(#{room_idx},#{partnerId},#{roomName},#{price},#{dogSize}, #{dogNum},  
+			#{peopleNum}, #{img_room1},#{img_room2},#{img_room3},
+			#{img_room4},#{img_room5},#{img_room6}, #{message_room}, #{pensionName})
+	</insert>
+	<!-- 펜션 세부 사항 출력 -->
+	<select id="RoomList" resultType="com.woori.domain.RoomVO" parameterType="String">
+		select   *   from  
+		room   
+		where   
+		pensionName = #{pensionName} 
+	</select>
+	
+	<!-- 펜션 등록 -->
+	<insert id="pensionRegister">
+		insert into pension (partnerId, region, pensionName, address, message, img_pension)  
+		values (#{partnerId}, #{region}, #{pensionName}, #{address}, #{message}, #{img_pension})
+	</insert>
+	
+	<!-- 커뮤니티 리스트 출력 -->
+	<select id="CList" resultType="com.woori.domain.CommunityVO">
+		select * from community 
+			<if test="keyword != null">
+                 <include refid="ccriteria"></include>
+            </if>
+		order by community.index DESC   limit #{skip},#{amount} 
+	</select>
+	<!-- 검색 조건문 -->
+    <sql id="ccriteria">
+        <trim prefix="where (" suffix=")" prefixOverrides="OR">
+            <foreach collection="typeArr" item="type">
+                <trim prefix="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content like concat('%',#{keyword},'%') 
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            writer like concat('%',#{keyword},'%' )
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    
+    </sql>
+    
+    <!-- 내 포스트 검색 -->
+    <select id="CMyList" resultType="com.woori.domain.CommunityVO">
+    	select * from community where writer=#{writer}
+    </select>
+    
+    <!-- 내 게시물 개수 -->
+	<select id="MygetCTotal" resultType="int">
+		select count(*) from community  where writer=#{writer}
+	</select>
+    
+    	<!-- 게시물 개수 -->
+	<select id="AgetCTotal" resultType="int">
+		select count(*) from community  
+		<if test="keyword != null">
+            <include refid="ccriteria"></include>
+        </if>   
+	</select>
+	<!-- 댓글 개수 -->
+	<select id="ReplyTotal" resultType="String">
+		select count(*) from  reply  where  reply.index  = #{index}    
+	</select>
+	<!-- 게시글 출력 -->
+	<select id="CView" resultType="com.woori.domain.CommunityVO" parameterType="int">
+		select * from community  where  community.index=#{index} 
+	</select>
+	<!-- 게시글 입력 -->
+	<insert id="CInsert" >
+	 	insert into community(title, content, writer, write_date)  
+	 	values (#{title}, #{content}, #{writer}, current_timestamp)
+	</insert>
+	
+	<!--게시글 수정 -->
+	<update id="CUpdate">
+		update community set   
+		
+		title=#{title},  
+		content=#{content},
+		write_date=current_timestamp  
+		where community.index=#{index}     
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="CDelete">
+		delete from community where community.index = #{index}   
+	</delete>
+	
+	<!-- 댓글 입력 -->
+	<insert id="ReplyInsert">
+		insert into reply(reply_content, secret, writer, reply_date, reply.index)  
+		values (#{reply_content}, #{secret}, #{writer},current_timestamp, #{index})  
+	</insert>
+	<!-- 댓글 출력 -->
+	<select id="ReplyList" resultType="com.woori.domain.ReplyVO">
+		select * from reply  where reply.index=#{index}  
+	</select>
+	<!-- 댓글 수정 -->
+	<update id="ReplyUpdate">
+		update reply set  
+		reply_content = #{reply_content},  
+		reply_date = current_timestamp   
+		where reply_index = #{reply_index}  
+		and reply.index = #{index}
+	</update>	
+	<!-- 댓글 삭제 -->
+	<delete id="ReplyDelete">
+		delete from reply   
+		where reply_index = #{reply_index}   
+	</delete>
+
+		<!-- 펜션 리스트 출력 -->
+	<select id="NameSelect" resultType="String">
+		select   pensionName   from   pension  
+	</select>
+	
+		<!-- 객실 리스트 출력 -->
+	<select id="RoomSelect" resultType="String">
+		select   roomName   from   room  
+		where pensionName = #{pensionName}  
+	</select>
+	
+</mapper>
