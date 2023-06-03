@@ -24,9 +24,10 @@ import java.util.Base64;
 @Controller
 public class AIController {
 
-	    
+	    //AI 서버
+	    //JYS
 	    private final String url="http://15.165.230.31:5000/detect";
-
+	    /드인코드
 	    private String getBase64String(MultipartFile multipartFile) throws Exception {
 	        byte[] bytes = multipartFile.getBytes();
 	        return Base64.getEncoder().encodeToString(bytes);
