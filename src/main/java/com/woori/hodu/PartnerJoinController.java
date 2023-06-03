@@ -54,7 +54,7 @@ public class PartnerJoinController {
 		public String plogin() {
 			return "login";
 		}
-		
+		//JYS
 		@RequestMapping("plogincheck.do")
 		public ModelAndView plogincheck(@ModelAttribute PartnerVO pvo, HttpSession psession, RedirectAttributes redirect) {
 			PartnerVO presult = partnerJoinService.plogincheck(pvo, psession);
@@ -110,6 +110,7 @@ public class PartnerJoinController {
 		
 		
 		// 회원가입 post
+		//JYS
 		@RequestMapping(value="psignin.do", method = RequestMethod.POST)
 		public String partnerJoin2(PartnerVO pvo, HttpServletResponse response) throws Exception {
 			int result = partnerJoinService.pidCheck(pvo);
@@ -132,14 +133,14 @@ public class PartnerJoinController {
 			
 			return "redirect:/";
 		}
-		
+		//JYS
 		@RequestMapping("viewPProfile.do")
 		public String viewPProfile(String partnerId, Model pmodel) {
 			pmodel.addAttribute("partner", partnerJoinService.viewPProfile(partnerId));
 			
 			return "partner/myPpage/editPProfile";
 		}
-		
+		//JYS
 		@RequestMapping("editPProfile.do")
 		public String editPProfile(@ModelAttribute PartnerVO pvo) {
 			String inputPass = pvo.getPartnerPw();
@@ -152,7 +153,7 @@ public class PartnerJoinController {
 		
 		@Autowired
 		private AWSS3Service s3Service;
-		
+		//JYS
 		@PostMapping("uploadPProfile.do")
 		public String fileUpload(@RequestParam("file") MultipartFile businessNum_img, @RequestParam("partnerId") String partnerId, RedirectAttributes redirect, HttpServletRequest req, @ModelAttribute PartnerVO pvo) throws Exception {
 			
@@ -189,14 +190,14 @@ public class PartnerJoinController {
 			int result = partnerJoinService.pidCheck(pvo);
 			return result;
 		}
-		
+		//JYS
 		@RequestMapping("deletePProfile.do")
 		public String deletePProfile(String partnerId, HttpSession psession) {
 			partnerJoinService.deletePProfile(partnerId, psession);
 			
 			return "redirect:/";
 		}
-		
+		//JYS
 		@RequestMapping("RList.do")
 		public String RList(ReservationVO rvo, Model rmodel) {
 			
@@ -205,7 +206,7 @@ public class PartnerJoinController {
 			
 			return "partner/myPpage/PreservationList";
 		}
-		
+		//JYS
 		@RequestMapping("RView.do")
 		public String RView(int reservation_idx, Model rmodel) {
 			rmodel.addAttribute("RView", partnerJoinService.RView(reservation_idx));
@@ -214,6 +215,7 @@ public class PartnerJoinController {
 		}
 		
 		//예약 삭제
+		//JYS	
 		@RequestMapping("RDelete.do")
 		public String RDelete(int reservation_idx, HttpSession rsession, RedirectAttributes redirect) {
 			partnerJoinService.RDelete(reservation_idx);
@@ -222,6 +224,7 @@ public class PartnerJoinController {
 		}
 		
 		//예약 수정
+		//JYS
 		@RequestMapping("RView2.do")
 		public String RView2(int reservation_idx, Model rmodel) {
 			rmodel.addAttribute("RView", partnerJoinService.RView(reservation_idx));
@@ -229,6 +232,7 @@ public class PartnerJoinController {
 			return "partner/myPpage/PreservationContent_update";
 		}
 		
+		//JYS
 		@RequestMapping("RUpdate.do")
 		public String RUpdate(@ModelAttribute ReservationVO rvo, @RequestParam("reservation_idx") int reservation_idx, RedirectAttributes redirect) {
 			partnerJoinService.RUpdate(rvo);
@@ -236,7 +240,7 @@ public class PartnerJoinController {
 			return "redirect: RView.do";
 		}
 		
-		
+		//JYS
 		@RequestMapping("AList.do")
 		public String QList(PCriteria Pcri, Model qmodel) {
 	
@@ -253,6 +257,7 @@ public class PartnerJoinController {
 		}
 		
 		//Q 확인
+		//JYS
 		@RequestMapping("AView.do")
 		public String AView(int Q_idx,HttpSession qsession, Model qmodel) {
 			qmodel.addAttribute("AView", partnerJoinService.AView(Q_idx,qsession));
@@ -261,19 +266,23 @@ public class PartnerJoinController {
 		}
 		
 		//A 등록
+		//JYS
 		@RequestMapping("Acomplete.do")
 		public String Aregister(@ModelAttribute QnaVO vo,@RequestParam("Q_idx") int Q_idx, RedirectAttributes redirect) {
 			partnerJoinService.ARegister(vo);
 			redirect.addAttribute("Q_idx", Q_idx);
 			return "redirect: AView.do";
 		}
+		
 		//MyPension 출력
+		//JYS
 		@RequestMapping("MyPension.do")
 		public String MyPension(PensionVO vo, Model model, HttpSession session) {
 			model.addAttribute("myPension",partnerJoinService.MyPension(vo, session));
 			return "partner/list_pension_info";
 		}
 		//MyRoom 출력
+		//JYS
 		@RequestMapping("ViewMyRoom.do")
 		public String ViewMyRoom(RoomVO vo, Model model, HttpSession session) {
 			
@@ -284,18 +293,21 @@ public class PartnerJoinController {
 		}
 		
 		//MyRoom 상세보기
+		//JYS
 		@RequestMapping("ContentMyRoom.do")
 		public String ViewMyRoom2(RoomVO vo, Model model) {
 			model.addAttribute("ContentMyRoom", partnerJoinService.ViewMyRoom2(vo));
 			return "partner/Content_My_Room";
 		}
 		//MyRoom 상세보기
+		//JYS
 		@RequestMapping("ViewRoomInfo.do")
 		public String ViewRoomInfo(RoomVO vo, Model model) {
 			model.addAttribute("ViewRoomInfo", partnerJoinService.ViewRoomInfo(vo));
 			return "partner/roomUpdate";
 		}
 		//MyRoom 수정
+		//JYS
 		@RequestMapping("roomUpdate.do")
 		public String roomUpdate(RoomVO vo, @RequestParam("room_idx") int room_idx, RedirectAttributes redirect) {
 			partnerJoinService.roomUpdate(vo);
@@ -303,12 +315,14 @@ public class PartnerJoinController {
 			return "redirect: ContentMyRoom.do";
 		}
 		//MyPension 출력
+		//JYS
 		@RequestMapping("ViewPension.do")
 		public String ViewPension(PensionVO vo, HttpSession session, Model model) {
 			model.addAttribute("pensionView", partnerJoinService.ViewPension(vo, session));
 			return "partner/pensionUpdate";
 		}
 		//MyPension 수정
+		//JYS
 		@RequestMapping("pensionUpdate.do")
 		public String pensionUpdate(PensionVO vo, HttpSession session, RedirectAttributes redirect) {
 			partnerJoinService.pensionUpdate(vo);
